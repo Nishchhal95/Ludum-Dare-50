@@ -15,36 +15,44 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float midToGroundOffset;
 
     [SerializeField] private bool jumpKeyPressed = false;
-    
-    [SerializeField] private bool useRawInput = false;
 
     [SerializeField] private float horizontalInput = 0;
+
+    [SerializeField] private PlayerInput playerInput;
+
+    private void OnEnable()
+    {
+        playerInput.onKeyPressed += OnKeyPressed;
+    }
+
+    private void OnDisable()
+    {
+        playerInput.onKeyPressed -= OnKeyPressed;
+    }
     
+    private void OnKeyPressed(KeyCode obj)
+    {
+        switch (obj)
+        {
+            case KeyCode.Space:
+                jumpKeyPressed = true;
+                jumpForce = Mathf.Sqrt(-2 * (Physics2D.gravity.y * playerRb.gravityScale) * jumpHeight);
+                break;
+            
+            case KeyCode.F:
+                FallDown();
+                break;
+        }
+    }
+
     private void Update()
     {
-        HandleInput();
         HandleGrounded();
     }
 
     private void FixedUpdate()
     {
         HandlePlayerPhysics();
-    }
-
-    private void HandleInput()
-    {
-        horizontalInput = useRawInput ? Input.GetAxisRaw("Horizontal") : Input.GetAxis("Horizontal");
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            jumpKeyPressed = true;
-            jumpForce = Mathf.Sqrt(-2 * (Physics2D.gravity.y * playerRb.gravityScale) * jumpHeight);
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            FallDown();
-        }
     }
 
     private void FallDown()
@@ -75,6 +83,9 @@ public class PlayerController : MonoBehaviour
     {
         float yVelocity = jumpKeyPressed && isGrounded ? jumpForce : playerRb.velocity.y;
         jumpKeyPressed = false;
+        
+        horizontalInput = playerInput.GetHorizontalInput();
+        
         playerRb.velocity = new Vector2(horizontalInput * playerSpeed, yVelocity);
     }
 

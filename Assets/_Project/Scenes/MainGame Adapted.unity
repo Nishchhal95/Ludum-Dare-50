@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 1256085593}
   - component: {fileID: 1256085594}
   - component: {fileID: 1256085595}
+  - component: {fileID: 1256085596}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -474,7 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRb: {fileID: 1256085593}
-  playerSpeed: 7
+  playerSpeed: 12
   jumpHeight: 12
   jumpForce: 5
   isGrounded: 0
@@ -483,8 +484,8 @@ MonoBehaviour:
     m_Bits: 256
   midToGroundOffset: 2.2
   jumpKeyPressed: 0
-  useRawInput: 0
   horizontalInput: 0
+  playerInput: {fileID: 1256085596}
 --- !u!114 &1256085595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,6 +499,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerAnimator: {fileID: 6575779809387160074}
+  playerInput: {fileID: 1256085596}
+--- !u!114 &1256085596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256085590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c967270e1b671124487960728af3d5bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRawInput: 1
+  horizontalInput: 0
 --- !u!1001 &1324498007
 PrefabInstance:
   m_ObjectHideFlags: 0

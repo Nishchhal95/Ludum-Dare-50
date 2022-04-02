@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,25 +15,73 @@ public class PlayerAnimation : MonoBehaviour
     private string right = "Right";
     private string up = "Up";
 
+    private string currentState = "Idle";
+
+    [SerializeField] private PlayerInput playerInput;
+
     void Start()
     {
-        animate(idle);
+        AnimateTrigger(idle);
+    }
+
+    private void OnEnable()
+    {
+        playerInput.onKeyPressed += OnKeyPressed;
+    }
+
+    private void OnDisable()
+    {
+        playerInput.onKeyPressed -= OnKeyPressed;
+    }
+    
+    private void OnKeyPressed(KeyCode obj)
+    {
+        switch (obj)
+        {
+            case KeyCode.Space:
+                AnimateTrigger(up);
+                break;
+            
+            case KeyCode.F:
+                AnimateTrigger(down);
+                break;
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
-            animate(dead);
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-            animate(down);
-        if (Input.GetKeyDown(KeyCode.Space))
-            animate(idle);
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            animate(left);
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-            animate(right);
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            animate(up);
+        ProcessPlayerInput();
+        
+        // if (Input.GetKeyDown(KeyCode.X))
+        //     animate(dead);
+        // if (Input.GetKeyDown(KeyCode.DownArrow))
+        //     animate(down);
+        // if (Input.GetKeyDown(KeyCode.Space))
+        //     animate(idle);
+        // if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //     animate(left);
+        // if (Input.GetKeyDown(KeyCode.RightArrow))
+        //     animate(right);
+        // if (Input.GetKeyDown(KeyCode.UpArrow))
+        //     animate(up);
+    }
+
+    private void ProcessPlayerInput()
+    {
+        if (playerInput.GetHorizontalInput() > 0)
+        {
+            AnimateTrigger(right);
+        }
+
+        else if(playerInput.GetHorizontalInput() < 0)
+        {
+            AnimateTrigger(left);
+        }
+
+        else
+        {
+            AnimateTrigger(idle);
+        }
     }
 
     /// <summary>
@@ -50,5 +99,16 @@ public class PlayerAnimation : MonoBehaviour
         PlayerAnimator.SetBool(up, false);
 
         PlayerAnimator.SetBool(state, true);
+    }
+
+    private void AnimateTrigger(string state)
+    {
+        if (currentState.Equals(state))
+        {
+            return;
+        }
+        Debug.Log("Playing State: " + state);
+        currentState = state;
+        PlayerAnimator.SetTrigger(state);
     }
 }
