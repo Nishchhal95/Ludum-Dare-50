@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private bool isGrounded = false;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float midToGroundOffset;
 
     [SerializeField] private bool jumpKeyPressed = false;
     
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
     private void HandleGrounded()
     {
         RaycastHit2D hit2D = Physics2D.Raycast(transform.position, -transform.up, 
-            (transform.localScale.y / 2) + 0.3f, groundLayer);
+            (transform.localScale.y / 2) + midToGroundOffset, groundLayer);
         if (hit2D.collider == null)
         {
             isGrounded = false;
@@ -86,5 +87,10 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(seconds);
         action?.Invoke();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawRay(transform.position, -transform.up * ((transform.localScale.y / 2) + midToGroundOffset));
     }
 }
