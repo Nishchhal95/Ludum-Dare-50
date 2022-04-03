@@ -1,27 +1,33 @@
-﻿using System;
+﻿using HappyFlowGames.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-
+    public GeneralAudioOneShot SFX;
     // Animator and its variables
     public Animator PlayerAnimator;
-    private string dead = "Dead";
-    private string down = "Down";
-    private string idle = "Idle";
-    private string left = "Left";
-    private string right = "Right";
-    private string up = "Up";
+    private string horizontal = "Horizontal";
+    private string vertical = "Vertical";
+    public enum PlayerState
+    {
+        Dead,
+        Down,
+        Idle,
+        Left,
+        Right,
+        Up
+    }
 
-    private string currentState = "Idle";
+    private PlayerState currentState = PlayerState.Idle;
 
     [SerializeField] private PlayerInput playerInput;
 
     void Start()
     {
-        AnimateTrigger(idle);
+        AnimateTrigger(PlayerState.Idle);
     }
 
     private void OnEnable()
@@ -33,17 +39,17 @@ public class PlayerAnimation : MonoBehaviour
     {
         playerInput.onKeyPressed -= OnKeyPressed;
     }
-    
+
     private void OnKeyPressed(KeyCode obj)
     {
         switch (obj)
         {
             case KeyCode.Space:
-                AnimateTrigger(up);
+                AnimateTrigger(PlayerState.Up);
                 break;
-            
+
             case KeyCode.F:
-                AnimateTrigger(down);
+                AnimateTrigger(PlayerState.Down);
                 break;
         }
     }
@@ -51,7 +57,7 @@ public class PlayerAnimation : MonoBehaviour
     void Update()
     {
         ProcessPlayerInput();
-        
+
         // if (Input.GetKeyDown(KeyCode.X))
         //     animate(dead);
         // if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -70,17 +76,17 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (playerInput.GetHorizontalInput() > 0)
         {
-            AnimateTrigger(right);
+            AnimateTrigger(PlayerState.Right);
         }
 
-        else if(playerInput.GetHorizontalInput() < 0)
+        else if (playerInput.GetHorizontalInput() < 0)
         {
-            AnimateTrigger(left);
+            AnimateTrigger(PlayerState.Left);
         }
 
         else
         {
-            AnimateTrigger(idle);
+            AnimateTrigger(PlayerState.Idle);
         }
     }
 
@@ -89,19 +95,12 @@ public class PlayerAnimation : MonoBehaviour
     /// Animator does not check if transition is valid!
     /// </summary>
     /// <param name="state"></param>
-    private void animate (string state)
+    private void animate(PlayerState state)
     {
-        PlayerAnimator.SetBool(dead, false);
-        PlayerAnimator.SetBool(down, false);
-        PlayerAnimator.SetBool(idle, false);
-        PlayerAnimator.SetBool(left, false);
-        PlayerAnimator.SetBool(right, false);
-        PlayerAnimator.SetBool(up, false);
 
-        PlayerAnimator.SetBool(state, true);
     }
 
-    private void AnimateTrigger(string state)
+    private void AnimateTrigger(PlayerState state)
     {
         if (currentState.Equals(state))
         {
@@ -109,6 +108,32 @@ public class PlayerAnimation : MonoBehaviour
         }
         Debug.Log("Playing State: " + state);
         currentState = state;
-        PlayerAnimator.SetTrigger(state);
+        // PlayerAnimator.SetTrigger(state);
+        switch (state)
+        {
+            case PlayerState.Down:
+                SFX.PlaySFX("Down");
+                PlayerAnimator.SetFloat(horizontal, 0f);
+                PlayerAnimator.SetFloat(vertical, -1f);
+                break;
+            default:
+            case PlayerState.Idle:
+                PlayerAnimator.SetFloat(horizontal, 0f);
+                PlayerAnimator.SetFloat(vertical, 0f);
+                break;
+            case PlayerState.Left:
+                PlayerAnimator.SetFloat(horizontal, -1f);
+                PlayerAnimator.SetFloat(vertical, 0f);
+                break;
+            case PlayerState.Right:
+                PlayerAnimator.SetFloat(horizontal, +1f);
+                PlayerAnimator.SetFloat(vertical, 0f);
+                break;
+            case PlayerState.Up:
+                SFX.PlaySFX("Up");
+                PlayerAnimator.SetFloat(horizontal, 0f);
+                PlayerAnimator.SetFloat(vertical, +1f);
+                break;
+        }
     }
 }

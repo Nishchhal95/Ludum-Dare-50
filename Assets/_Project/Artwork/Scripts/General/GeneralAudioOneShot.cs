@@ -40,7 +40,7 @@ namespace HappyFlowGames.General
         /// Play
         /// </summary>
         /// <param name="clip"></param>
-        public void PlayerSFX(string clip)
+        public void PlaySFX(string clip)
         {
             if (clip == LevelEndClipName)
             {

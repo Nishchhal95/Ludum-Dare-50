@@ -33,7 +33,7 @@ namespace LD50
         public PoolingSimple PoolPlatform;
         [Header("Platform")]
         public Transform PlatformParent;
-        public GameObject PlatformTemplate;
+        public GameObject [] PlatformTemplates;
 
         // Misc
         public enum MiscType
@@ -56,7 +56,7 @@ namespace LD50
         {
             PoolGood = new PoolingSimple(GoodTemplates, GoodParent, "Good", PoolingNumberOfGameObjectsCreatedAtOnce, PoolingInitialAmount);
             PoolBad = new PoolingSimple(BadTemplates, BadParent, "Bad", PoolingNumberOfGameObjectsCreatedAtOnce, PoolingInitialAmount);
-            PoolPlatform = new PoolingSimple(PlatformTemplate, PlatformParent, "Platform", PoolingNumberOfGameObjectsCreatedAtOnce, PoolingInitialAmount);
+            PoolPlatform = new PoolingSimple(PlatformTemplates, PlatformParent, "Platform", PoolingNumberOfGameObjectsCreatedAtOnce, PoolingInitialAmount);
             PoolMisc = new PoolingSimple(MiscTemplates, MiscParent, "Misc", PoolingNumberOfGameObjectsCreatedAtOnce, PoolingInitialAmount);
         }
 
